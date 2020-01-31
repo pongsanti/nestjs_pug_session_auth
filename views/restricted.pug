@@ -1,0 +1,13 @@
+doctype html
+html(lang="en")
+  head
+    title= Restricted
+  body
+    h1 Restricted!
+    #container.col
+      div Name #{user.username}
+    
+    br
+    a(href='/profile') Profile
+    br
+    a(href='/logout') Logout

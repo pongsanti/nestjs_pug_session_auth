@@ -1,6 +1,8 @@
 import { Controller, Get, Render, Request, Post, UseGuards, Res } from '@nestjs/common';
 import { AppService } from './app.service';
-import { AuthGuard } from '@nestjs/passport';
+import { LoginGuard } from './auth/common/guards/login.guard';
+import { AuthenticatedGuard } from './auth/common/guards/authenticate.guard';
+import { Response } from 'express';
 
 @Controller()
 export class AppController {
@@ -8,14 +10,16 @@ export class AppController {
 
   @Get()
   @Render('index')
-  root() {
+  root(
+    @Request() req,
+  ) {
     return {
       pageTitle: 'Pug test',
       youAreUsingPug: true,
     };
   }
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LoginGuard)
   @Post('auth/login')
   @Render('profile')
   async login(
@@ -24,5 +28,25 @@ export class AppController {
     return {
       user: req.user,
     };
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Get('profile')
+  @Render('profile')
+  async profile(@Request() req) {
+    return { user: req.user };
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Get('restricted')
+  @Render('restricted')
+  async restricted(@Request() req) {
+    return { user: req.user };
+  }
+
+  @Get('logout')
+  logout(@Request() req, @Res() res: Response) {
+    req.logout();
+    res.redirect('/');
   }
 }
