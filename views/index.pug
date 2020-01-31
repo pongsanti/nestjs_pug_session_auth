@@ -12,3 +12,13 @@ html(lang="en")
       p.
         Pug is a terse and simple templating language with a
         strong focus on performance and powerful features.
+    form(action='auth/login' method='POST')
+      span Username:
+        input#username(name='username')
+      br
+      span Password:
+        input#password(type='password' name='password')
+      br
+      br
+      button(type='submit') Submit
+      button(type='reset') Reset
